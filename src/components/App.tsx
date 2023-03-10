@@ -1,9 +1,13 @@
 import * as React from "react"
+import Login from "./login"
+
 
 const App = () => {
 
   return (
-    <div>My react app!</div>
+    <div>
+      <Login />
+    </div>
   )
 }
 
