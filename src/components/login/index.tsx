@@ -1,7 +1,8 @@
-import * as React from 'react'
+import React from 'react'
 import './index.css'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faCode} from '@fortawesome/free-solid-svg-icons'
+import Main from '../main/index'
 
 
 const Login = () => {
@@ -13,7 +14,7 @@ const Login = () => {
           <h1>DevTime</h1>
         </div>
         <div className="login-input-container">
-          <form action="" className="login-form">
+          <form className="login-form">
             <label htmlFor="username">Username</label>
             <input id='username' placeholder='Enter username...'></input>
             <label htmlFor="room">Room</label>

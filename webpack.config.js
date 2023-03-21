@@ -5,7 +5,11 @@ module.exports = {
     entry: './src/index.tsx',
     output: {
         path: path.join(__dirname, '/dist'),
-        filename: 'index_bundle.js'
+        filename: 'index_bundle.js',
+        publicPath: '/'
+    },
+    devServer: {
+        historyApiFallback: true
     },
     module: {
         rules : [
@@ -29,8 +33,8 @@ module.exports = {
     plugins: [
         new htmlWebpackPlugin(
             {
-                template: './src/index.html'
+                template: './src/index.html',
             }
         )
-    ]
+    ],
 }

@@ -1,0 +1,20 @@
+.chatbox-container {
+    width: 800px;
+    height: 500px;
+    display: flex;
+    flex-direction: column;
+}
+
+.chatbox-header {
+    background-color: rgb(111, 105, 216);
+    display: flex;
+    justify-content: space-between;
+}
+
+.chatbox-sidebar {
+    background-color: rgb(128, 128, 245);
+}
+
+.chatbox-input-container {
+    background-color: rgb(111, 105, 216);
+}
