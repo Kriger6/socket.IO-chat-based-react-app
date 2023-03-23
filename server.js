@@ -19,8 +19,21 @@ app.get("/*", function (req, res) {
     });
 });
 
-io.on('connection', socket => console.log("new websocket connection"))
+io.on('connection', socket => {
+
+    socket.emit('message', 'Welcome to DevTime')
+
+    socket.broadcast.emit('message', 'User has joined a chat')
+
+
+    socket.on('disconnect', () => {
+        io.emit('message', 'User has left the chat')
+    })
+})
 
 const PORT = 3000 || process.env.PORT
 
 server.listen(PORT, () => console.log(`server running on ${PORT}`))
+
+
+module.exports = { io }

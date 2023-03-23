@@ -29,14 +29,14 @@ button {
 
 .chatbox-section {
     display: grid;
-    grid-template-columns: 1fr 4fr;
+    grid-template-columns: 1fr 3fr;
 }
 
 .chatbox-sidebar-container {
     background-color: rgb(128, 128, 245);
     height: 300px;
     color: white;
-    padding: 10px;
+    padding: 15px;
 }
 
 .chatbox-sidebar h3 {
@@ -83,4 +83,11 @@ button {
 .logo h1 {
     font-size: 1.5rem;
     padding: 0 5px 0 5px;
+}
+
+.room-name {
+    padding: 10px;
+    background-color: rgb(109, 109, 206);
+    margin: 15px 10px 15px 10px;
+    font-weight: lighter;
 }

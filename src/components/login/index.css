@@ -32,8 +32,13 @@
 }
 
 .login-form button {
-    padding: 3px;
     margin: 25px 0 0 0;
+}
+
+.button-link {
+    display: block;
+    text-decoration: none;
+    padding: 3px;
 }
 
 .login-container {
