@@ -20,16 +20,16 @@ const Login = () => {
         <div className="login-input-container">
           <form className="login-form">
             <label htmlFor="username">Username</label>
-            <input onChange={(e) => setUsername(e.target.value)} id='username' placeholder='Enter username...'></input>
+            <input required onChange={(e) => setUsername(e.target.value)} id='username' placeholder='Enter username...'></input>
             <label htmlFor="room">Room</label>
             <select onChange={(e) => setOption(e.target.value)} id='room'>
-              <option value='javascript'>Javascript</option>
-              <option value='php'>PHP</option>
-              <option value='c++'>C++</option>
-              <option value='java'>Java</option>
+              <option value='Javascript'>Javascript</option>
+              <option value='PHP'>PHP</option>
+              <option value='C++'>C++</option>
+              <option value='Java'>Java</option>
             </select>
             <button type="submit">
-              <Link state={{username: username, option: option}} className='button-link' to={'main'}>Join chat</Link>
+              <Link state={{username: username, option: option}} className='button-link' to={username !== null && username !== '' ? 'main' : null}>Join chat</Link>
             </button>
           </form>
         </div>

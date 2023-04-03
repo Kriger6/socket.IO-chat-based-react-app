@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import './index.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCode, faComments, faPaperPlane, faUsers } from '@fortawesome/free-solid-svg-icons'
@@ -11,6 +11,14 @@ const Main = () => {
 
   const location = useLocation()
   const {username, option} = location.state
+
+  const [message, setMessage] = useState<string | null>(null)
+
+  const sendMessage = () => {
+    console.log(message);
+    
+    socket.emit('message', message)
+  }
 
   const socket = io()
   
@@ -43,8 +51,8 @@ const Main = () => {
           </div>
         </div>
         <div className="chatbox-input-container">
-          <input placeholder='Enter message' type="text" />
-          <button className='send-button'><FontAwesomeIcon icon={faPaperPlane} /> Send</button>
+          <input onChange={(e) => setMessage(e.target.value)} placeholder='Enter message' type="text" />
+          <button onClick={sendMessage} className='send-button'><FontAwesomeIcon icon={faPaperPlane} /> Send</button>
         </div>
       </div>
     </div>

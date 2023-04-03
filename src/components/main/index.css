@@ -72,6 +72,7 @@ button {
     width: 70px;
     color: rgb(128, 128, 245);
     background-color: rgb(230, 223, 243);
+    cursor: pointer;
 }
 
 .logo {
