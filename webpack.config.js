@@ -9,7 +9,12 @@ module.exports = {
         publicPath: '/'
     },
     devServer: {
-        historyApiFallback: true
+        historyApiFallback: true,
+        static: {
+            directory: path.join(__dirname, '/src/components'),
+        },
+        compress: true,
+        port: 8080,
     },
     module: {
         rules : [

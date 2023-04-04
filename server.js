@@ -31,11 +31,11 @@ io.on('connection', socket => {
     })
 
     socket.on('message', (message) => {
-        console.log(message);
+        io.emit('message', message)
     })
 })
 
-const PORT = 3000 || process.env.PORT
+const PORT = 8080 || process.env.PORT
 
 server.listen(PORT, () => console.log(`server running on ${PORT}`))
 
