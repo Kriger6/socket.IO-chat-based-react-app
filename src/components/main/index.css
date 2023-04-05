@@ -92,3 +92,8 @@ button {
     margin: 15px 10px 15px 10px;
     font-weight: lighter;
 }
+
+form {
+    width: 100%;
+    display: flex;
+}

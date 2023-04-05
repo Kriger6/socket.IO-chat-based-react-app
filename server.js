@@ -30,12 +30,12 @@ io.on('connection', socket => {
         io.emit('message', 'User has left the chat')
     })
 
-    socket.on('message', (message) => {
-        io.emit('message', message)
+    socket.on('message', (msg) => {
+        io.emit('message', msg)
     })
 })
 
-const PORT = 8080 || process.env.PORT
+const PORT = 3000 || process.env.PORT
 
 server.listen(PORT, () => console.log(`server running on ${PORT}`))
 

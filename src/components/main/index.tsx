@@ -1,16 +1,16 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import './index.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCode, faComments, faPaperPlane, faUsers } from '@fortawesome/free-solid-svg-icons'
 import { Link, useLocation } from 'react-router-dom'
 import { io } from "socket.io-client";
 
-
+const socket = io()
 
 const Main = () => {
 
   const location = useLocation()
-  const {username, option} = location.state
+  const { username, option } = location.state
 
   const inputRef = useRef<HTMLInputElement | null>(null)
 
@@ -18,22 +18,26 @@ const Main = () => {
   const [message, setMessage] = useState<string | null>(null)
 
   const sendMessage = () => {
-    
     socket.emit('message', message)
     setMessage(null)
 
-    
+
     inputRef.current.value = ''
-    console.log(inputRef.current.value);
-    
   }
 
-  const socket = io()
-  
-  socket.on('message', message => console.log(message))
 
-  
-  
+  useEffect(() => {    
+    socket.on("message", (message) => {
+      console.log(message)
+    })
+
+    return () => {
+      socket.removeListener("message")
+    }
+  }, [socket])
+
+
+
   return (
     <div>
       <div className="chatbox-container">
@@ -59,8 +63,14 @@ const Main = () => {
           </div>
         </div>
         <div className="chatbox-input-container">
-          <input ref={inputRef} type='text' onChange={(e) => setMessage(e.target.value)} placeholder='Enter message' />
-          <button type='submit' onClick={sendMessage} className='send-button'><FontAwesomeIcon icon={faPaperPlane} /> Send</button>
+          <form onSubmit={
+            (e) => {
+              e.preventDefault()
+              sendMessage()
+              }}>
+            <input ref={inputRef} type='text' onChange={(e) => setMessage(e.target.value)} placeholder='Enter message' />
+            <button type='submit' onClick={() => sendMessage} className='send-button'><FontAwesomeIcon icon={faPaperPlane} /> Send</button>
+          </form>
         </div>
       </div>
     </div>
