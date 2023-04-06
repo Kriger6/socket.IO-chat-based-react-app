@@ -5,12 +5,17 @@ import { faCode, faComments, faPaperPlane, faUsers } from '@fortawesome/free-sol
 import { Link, useLocation } from 'react-router-dom'
 import { io } from "socket.io-client";
 
-const socket = io()
+const socket = io({
+  autoConnect: false
+})
+
 
 const Main = () => {
 
   const location = useLocation()
   const { username, option } = location.state
+
+  const [chatMessages, setChatMessages] = useState<any>(["socket"])
 
   const inputRef = useRef<HTMLInputElement | null>(null)
 
@@ -18,23 +23,42 @@ const Main = () => {
   const [message, setMessage] = useState<string | null>(null)
 
   const sendMessage = () => {
-    socket.emit('message', message)
+    if (message === null || message === undefined) {
+      return
+    }
+    socket.emit('chat message', message)
     setMessage(null)
 
 
     inputRef.current.value = ''
   }
 
+  useEffect(() => {
+    socket.connect()
+  }, [socket])
 
-  useEffect(() => {    
+
+  useEffect(() => {
+    socket.on("chat message", (message) => {
+      setChatMessages(
+        [...chatMessages, message])
+      console.log(message)
+    })
     socket.on("message", (message) => {
       console.log(message)
     })
 
     return () => {
+      socket.removeListener("chat message")
       socket.removeListener("message")
     }
-  }, [socket])
+  }, [socket, chatMessages])
+
+  const arrayMessages = chatMessages?.map((chatMessage: any) =>
+    <div style={{ background: '#34C759' }}>
+      <p>{chatMessage}</p>
+    </div>
+  )
 
 
 
@@ -46,7 +70,7 @@ const Main = () => {
             <FontAwesomeIcon icon={faCode} />
             <h1>DevTime</h1>
           </div>
-          <button className='leave-room-button'>
+          <button onClick={() => socket.disconnect()} className='leave-room-button'>
             <Link className='button-link' to={'/'}>Leave room</Link>
           </button>
         </div>
@@ -59,7 +83,7 @@ const Main = () => {
             </div>
           </div>
           <div className="chatbox">
-            <div className="chatbox-messages-container"></div>
+            {arrayMessages}
           </div>
         </div>
         <div className="chatbox-input-container">
@@ -67,7 +91,7 @@ const Main = () => {
             (e) => {
               e.preventDefault()
               sendMessage()
-              }}>
+            }}>
             <input ref={inputRef} type='text' onChange={(e) => setMessage(e.target.value)} placeholder='Enter message' />
             <button type='submit' onClick={() => sendMessage} className='send-button'><FontAwesomeIcon icon={faPaperPlane} /> Send</button>
           </form>

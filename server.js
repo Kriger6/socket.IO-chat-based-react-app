@@ -30,14 +30,11 @@ io.on('connection', socket => {
         io.emit('message', 'User has left the chat')
     })
 
-    socket.on('message', (msg) => {
-        io.emit('message', msg)
+    socket.on('chat message', (msg) => {
+        io.emit('chat message', msg)
     })
 })
 
 const PORT = 3000 || process.env.PORT
 
 server.listen(PORT, () => console.log(`server running on ${PORT}`))
-
-
-module.exports = { io }
