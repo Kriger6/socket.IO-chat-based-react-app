@@ -15,7 +15,7 @@ const Main = () => {
   const location = useLocation()
   const { username, option } = location.state
 
-  const [chatMessages, setChatMessages] = useState<any>(["socket"])
+  const [chatMessages, setChatMessages] = useState<any>([])
 
   const inputRef = useRef<HTMLInputElement | null>(null)
 
@@ -26,7 +26,7 @@ const Main = () => {
     if (message === null || message === undefined) {
       return
     }
-    socket.emit('chat message', message)
+    socket.emit('chat message', message, username)
     setMessage(null)
 
 
@@ -41,7 +41,7 @@ const Main = () => {
   useEffect(() => {
     socket.on("chat message", (message) => {
       setChatMessages(
-        [...chatMessages, message])
+        [...chatMessages, [message, username]])
       console.log(message)
     })
     socket.on("message", (message) => {
@@ -55,8 +55,9 @@ const Main = () => {
   }, [socket, chatMessages])
 
   const arrayMessages = chatMessages?.map((chatMessage: any) =>
-    <div style={{ background: '#34C759' }}>
-      <p>{chatMessage}</p>
+    <div className='message-box' style={{ background: '#E4E6FE' }}>
+      <small style={{ color: '#8D99F1' }}>{chatMessage[1]}</small>
+      <p>{chatMessage[0]}</p>
     </div>
   )
 

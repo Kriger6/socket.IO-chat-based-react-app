@@ -30,8 +30,8 @@ io.on('connection', socket => {
         io.emit('message', 'User has left the chat')
     })
 
-    socket.on('chat message', (msg) => {
-        io.emit('chat message', msg)
+    socket.on('chat message', (msg, username) => {
+        io.emit('chat message', msg, username)
     })
 })
 
