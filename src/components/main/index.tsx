@@ -18,6 +18,8 @@ const Main = () => {
   const [chatMessages, setChatMessages] = useState<any>([])
 
   const inputRef = useRef<HTMLInputElement | null>(null)
+  const scrollDummyRef = useRef<HTMLDivElement | null>(null) 
+  const chatBoxRef = useRef<HTMLDivElement | null>(null) 
 
 
   const [message, setMessage] = useState<string | null>(null)
@@ -37,11 +39,20 @@ const Main = () => {
     socket.connect()
   }, [socket])
 
+  const scrollToBottom = () => {
+    chatBoxRef.current.scrollTo({
+      top: scrollDummyRef.current.scrollHeight,
+      behavior: 'smooth',
+    });
+  };
 
   useEffect(() => {
-    socket.on("chat message", (message) => {
+    socket.on("chat message", (message, user) => {
       setChatMessages(
-        [...chatMessages, [message, username]])
+        [...chatMessages, [message, user]]
+      )
+      // scrollDummyRef.current.scrollIntoView({block: 'start'})
+      scrollToBottom()
       console.log(message)
     })
     socket.on("message", (message) => {
@@ -55,7 +66,7 @@ const Main = () => {
   }, [socket, chatMessages])
 
   const arrayMessages = chatMessages?.map((chatMessage: any) =>
-    <div className='message-box' style={{ background: '#E4E6FE' }}>
+    <div className='message-box' style={{ background: '#E4E6FE', alignSelf: chatMessage[1] !== username ? 'flex-start' : '' }}>
       <small style={{ color: '#8D99F1' }}>{chatMessage[1]}</small>
       <p>{chatMessage[0]}</p>
     </div>
@@ -83,8 +94,9 @@ const Main = () => {
               <h3><FontAwesomeIcon icon={faUsers} /> Users</h3>
             </div>
           </div>
-          <div className="chatbox">
+          <div ref={chatBoxRef} className="chatbox">
             {arrayMessages}
+            <div ref={scrollDummyRef}></div>
           </div>
         </div>
         <div className="chatbox-input-container">
