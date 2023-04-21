@@ -18,7 +18,6 @@ const Main = () => {
   const [chatMessages, setChatMessages] = useState<any>([])
 
   const inputRef = useRef<HTMLInputElement | null>(null)
-  const scrollDummyRef = useRef<HTMLDivElement | null>(null) 
   const chatBoxRef = useRef<HTMLDivElement | null>(null) 
 
 
@@ -33,31 +32,39 @@ const Main = () => {
 
 
     inputRef.current.value = ''
+    inputRef.current.focus()
   }
 
   useEffect(() => {
     socket.connect()
+    socket.emit('infoTransfer', username, option)
   }, [socket])
 
   const scrollToBottom = () => {
     chatBoxRef.current.scrollTo({
-      top: scrollDummyRef.current.scrollHeight,
+      top: chatBoxRef.current.scrollHeight,
       behavior: 'smooth',
     });
   };
 
   useEffect(() => {
-    socket.on("chat message", (message, user) => {
+    socket.on("chat message", (message, user, time) => {
       setChatMessages(
-        [...chatMessages, [message, user]]
+        [...chatMessages, [message, user, time]]
       )
-      // scrollDummyRef.current.scrollIntoView({block: 'start'})
-      scrollToBottom()
-      console.log(message)
     })
-    socket.on("message", (message) => {
-      console.log(message)
+    socket.on("message", (message, user, time) => {
+      setChatMessages(
+        [...chatMessages, [message, user, time]]
+      )
     })
+
+    if (chatMessages.length > 0) {
+      if (chatMessages[chatMessages.length - 1][1] === username) {
+        scrollToBottom()
+      }
+    }
+
 
     return () => {
       socket.removeListener("chat message")
@@ -68,6 +75,7 @@ const Main = () => {
   const arrayMessages = chatMessages?.map((chatMessage: any) =>
     <div className='message-box' style={{ background: '#E4E6FE', alignSelf: chatMessage[1] !== username ? 'flex-start' : '' }}>
       <small style={{ color: '#8D99F1' }}>{chatMessage[1]}</small>
+      <small style={{marginLeft: '5px', color: 'grey'}} >{chatMessage[2]}</small>
       <p>{chatMessage[0]}</p>
     </div>
   )
@@ -96,7 +104,6 @@ const Main = () => {
           </div>
           <div ref={chatBoxRef} className="chatbox">
             {arrayMessages}
-            <div ref={scrollDummyRef}></div>
           </div>
         </div>
         <div className="chatbox-input-container">
