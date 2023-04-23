@@ -23,22 +23,41 @@ app.get("/*", function (req, res) {
 
 const users = []
 
+const getTime = () => {
+    return moment().format('h:mm a')
+}
+
+const findUser = (socket) => {
+    const found = users.find((element, index) => {
+        if (element[2] === socket) {
+            return index
+        }
+    })
+    return found
+}
+
 io.on('connection', socket => {
+    
+    let user
     socket.on('infoTransfer', (username, room) => {
         users.push([username, room, socket.id])
+        user = username
+        
+        io.emit('info', users)
+
+        socket.broadcast.emit('message', `${user} has joined a chat`, 'Chat Bot', getTime())
     })
 
-    socket.emit('message', 'Welcome to DevTime', 'Chat Bot', moment().format('h:mm a'))
-
-    socket.broadcast.emit('message', 'User has joined a chat', 'Chat Bot', moment().format('h:mm a'))
-
+    socket.emit('message', 'Welcome to DevTime', 'Chat Bot', getTime())
 
     socket.on('disconnect', () => {
-        io.emit('message', 'User has left the chat', 'Chat Bot', moment().format('h:mm a'))
+        users.splice(findUser(socket.id), 1)
+        io.emit('info', users)
+        io.emit('message', `${user} has left the chat`, 'Chat Bot', getTime())
     })
 
     socket.on('chat message', (msg, username) => {
-        let time = moment().format('h:mm a')
+        let time = getTime()
         io.emit('chat message', msg, username, time)
     })
 })

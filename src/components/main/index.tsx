@@ -15,6 +15,8 @@ const Main = () => {
   const location = useLocation()
   const { username, option } = location.state
 
+  const [usersArray, setUsersArray] = useState<string[] | null>(null) 
+
   const [chatMessages, setChatMessages] = useState<any>([])
 
   const inputRef = useRef<HTMLInputElement | null>(null)
@@ -48,6 +50,9 @@ const Main = () => {
   };
 
   useEffect(() => {
+    socket.on("info", (users) => {
+      setUsersArray(users)
+    })
     socket.on("chat message", (message, user, time) => {
       setChatMessages(
         [...chatMessages, [message, user, time]]
@@ -71,6 +76,12 @@ const Main = () => {
       socket.removeListener("message")
     }
   }, [socket, chatMessages])
+
+  const arrayOfUsers = usersArray?.map(user => 
+    <p className='user'>
+      {user[0]}
+    </p> 
+  )
 
   const arrayMessages = chatMessages?.map((chatMessage: any) =>
     <div className='message-box' style={{ background: '#E4E6FE', alignSelf: chatMessage[1] !== username ? 'flex-start' : '' }}>
@@ -100,6 +111,7 @@ const Main = () => {
               <h3><FontAwesomeIcon icon={faComments} /> Room Name:</h3>
               <h3 className='room-name'>{option}</h3>
               <h3><FontAwesomeIcon icon={faUsers} /> Users</h3>
+              {arrayOfUsers}
             </div>
           </div>
           <div ref={chatBoxRef} className="chatbox">

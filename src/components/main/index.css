@@ -38,6 +38,7 @@ button {
     height: 100%;
     color: white;
     padding: 15px;
+    min-width: 0;
 }
 
 .chatbox-sidebar h3 {
@@ -97,6 +98,11 @@ button {
     background-color: rgb(109, 109, 206);
     margin: 15px 10px 15px 10px;
     font-weight: lighter;
+}
+
+.user {
+    margin-left: 30px;
+    margin-top: 10px;
 }
 
 form {

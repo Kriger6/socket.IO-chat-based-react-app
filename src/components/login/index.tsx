@@ -18,7 +18,7 @@ const Login = () => {
           <h1>DevTime</h1>
         </div>
         <div className="login-input-container">
-          <form className="login-form">
+          <form onSubmit={(e) => e.preventDefault()} className="login-form">
             <label htmlFor="username">Username</label>
             <input required onChange={(e) => setUsername(e.target.value)} id='username' placeholder='Enter username...'></input>
             <label htmlFor="room">Room</label>
