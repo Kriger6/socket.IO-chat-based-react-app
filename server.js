@@ -28,9 +28,9 @@ const getTime = () => {
 }
 
 const findUser = (socket) => {
-    const found = users.find((element, index) => {
+    const found = users.findIndex(element => {
         if (element[2] === socket) {
-            return index
+            return element
         }
     })
     return found
@@ -39,13 +39,15 @@ const findUser = (socket) => {
 io.on('connection', socket => {
     
     let user
+    let userInRoom
     socket.on('infoTransfer', (username, room) => {
+        socket.join(room)
         users.push([username, room, socket.id])
         user = username
-        
+        userInRoom = room
         io.emit('info', users)
 
-        socket.broadcast.emit('message', `${user} has joined a chat`, 'Chat Bot', getTime())
+        socket.broadcast.to(room).emit('message', `${user} has joined a chat`, 'Chat Bot', getTime())
     })
 
     socket.emit('message', 'Welcome to DevTime', 'Chat Bot', getTime())
@@ -53,12 +55,12 @@ io.on('connection', socket => {
     socket.on('disconnect', () => {
         users.splice(findUser(socket.id), 1)
         io.emit('info', users)
-        io.emit('message', `${user} has left the chat`, 'Chat Bot', getTime())
+        io.to(userInRoom).emit('message', `${user} has left the chat`, 'Chat Bot', getTime())
     })
 
     socket.on('chat message', (msg, username) => {
         let time = getTime()
-        io.emit('chat message', msg, username, time)
+        io.to(userInRoom).emit('chat message', msg, username, time)
     })
 })
 

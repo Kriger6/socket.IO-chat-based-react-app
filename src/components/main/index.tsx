@@ -15,12 +15,12 @@ const Main = () => {
   const location = useLocation()
   const { username, option } = location.state
 
-  const [usersArray, setUsersArray] = useState<string[] | null>(null) 
+  const [usersArray, setUsersArray] = useState<string[] | null>(null)
 
   const [chatMessages, setChatMessages] = useState<any>([])
 
   const inputRef = useRef<HTMLInputElement | null>(null)
-  const chatBoxRef = useRef<HTMLDivElement | null>(null) 
+  const chatBoxRef = useRef<HTMLDivElement | null>(null)
 
 
   const [message, setMessage] = useState<string | null>(null)
@@ -77,16 +77,21 @@ const Main = () => {
     }
   }, [socket, chatMessages])
 
-  const arrayOfUsers = usersArray?.map(user => 
-    <p className='user'>
-      {user[0]}
-    </p> 
+  const arrayOfUsers = usersArray?.map(user => {
+    if (user[1] === option) {
+      return (
+        <p className='user'>
+          {user[0]}
+        </p>
+      )
+    }
+  }
   )
 
   const arrayMessages = chatMessages?.map((chatMessage: any) =>
     <div className='message-box' style={{ background: '#E4E6FE', alignSelf: chatMessage[1] !== username ? 'flex-start' : '' }}>
       <small style={{ color: '#8D99F1' }}>{chatMessage[1]}</small>
-      <small style={{marginLeft: '5px', color: 'grey'}} >{chatMessage[2]}</small>
+      <small style={{ marginLeft: '5px', color: 'grey' }} >{chatMessage[2]}</small>
       <p>{chatMessage[0]}</p>
     </div>
   )
